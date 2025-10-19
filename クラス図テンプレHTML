@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMLクラス図テンプレート - Excel形式</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .sheet-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            background: #f5f5f5;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .sheet {
+            display: none;
+        }
+        
+        .sheet.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:hover {
+            background: #f8f9ff;
+        }
+        
+        .example-box {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .example-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .class-diagram {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .class-name {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #667eea;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .attributes, .methods {
+            margin: 10px 0;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            color: #764ba2;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .tips {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .tips h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .relationship-diagram {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 UMLクラス図テンプレート</h1>
+            <p>新人エンジニア向け - Excel形式ダウンロード可能</p>
+        </div>
+        
+        <div class="content">
+            <div class="sheet-tabs">
+                <button class="tab active" onclick="showSheet(1)">シート1：テンプレート</button>
+                <button class="tab" onclick="showSheet(2)">シート2：記入例</button>
+                <button class="tab" onclick="showSheet(3)">シート3：関係性一覧</button>
+                <button class="tab" onclick="showSheet(4)">シート4：記載ポイント</button>
+            </div>
+            
+            <!-- シート1：テンプレート -->
+            <div class="sheet active" id="sheet1">
+                <h2 style="color: #667eea; margin-bottom: 20px;">📝 クラス図テンプレート</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <th>内容</th>
+                            <th>記入例</th>
+                            <th>メモ（記載ポイント）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>クラス名</strong></td>
+                            <td>クラスの名前を記載</td>
+                            <td><code>User</code></td>
+                            <td>名詞で統一。1クラス＝1役割を意識。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>説明</strong></td>
+                            <td>クラスの目的や役割を簡潔に記述</td>
+                            <td>「ユーザー情報を管理するクラス」</td>
+                            <td>一文で機能を説明すると見やすい。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>属性（フィールド）</strong></td>
+                            <td>クラスが持つデータ項目</td>
+                            <td><code>user_id: int</code><br><code>email: str</code><br><code>created_at: datetime</code></td>
+                            <td>「変数名: 型」で書く。アクセス修飾子（+/-/#）を付けてもOK。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>操作（メソッド）</strong></td>
+                            <td>クラスが持つ処理</td>
+                            <td><code>login()</code><br><code>update_email()</code><br><code>delete_account()</code></td>
+                            <td>動詞で統一。機能単位で命名。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>アクセス修飾子</strong></td>
+                            <td>公開範囲を明示</td>
+                            <td><code>+ public</code><br><code>- private</code><br><code># protected</code></td>
+                            <td>クラス図では簡略記号で表現可能。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>関連（Association）</strong></td>
+                            <td>他クラスとの関係</td>
+                            <td><code>User 1 --- * Order</code></td>
+                            <td>1対多（1..*）や依存関係（→）を矢印で表す。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>継承（Generalization）</strong></td>
+                            <td>継承関係を表現</td>
+                            <td><code>AdminUser ⟶ User</code></td>
+                            <td>三角矢印（▷）で表記。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>依存（Dependency）</strong></td>
+                            <td>あるクラスが他クラスを利用</td>
+                            <td><code>Order ⟶ Product</code></td>
+                            <td>メソッド内で利用する関係を示す。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>集約・合成</strong></td>
+                            <td>部分と全体の関係</td>
+                            <td><code>Team ◇── Member</code>（集約）<br><code>Team ◆── Member</code>（合成）</td>
+                            <td>白菱形＝集約、黒菱形＝合成。</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="tips">
+                    <h4>💡 記載のポイント</h4>
+                    <ul>
+                        <li>クラス図は <strong>上：クラス名 → 中：属性 → 下：操作（メソッド）</strong> の3段構造で書く</li>
+                        <li>共通処理はスーパークラスにまとめ、重複を避ける</li>
+                        <li>関連線に <strong>多重度（1、0..1、1..*）</strong> を書くと、データ構造が理解しやすい</li>
+                        <li>操作（メソッド）は <strong>処理の責任を持つクラス</strong> に置く</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- シート2：記入例 -->
+            <div class="sheet" id="sheet2">
+                <h2 style="color: #667eea; margin-bottom: 20px;">📖 記入例：User - Order - Product</h2>
+                
+                <div class="example-box">
+                    <h3>クラス1: User（ユーザー）</h3>
+                    <div class="class-diagram">
+                        <div class="class-name">User</div>
+                        <div class="section-title">属性（Attributes）</div>
+                        <div class="attributes">
+                            - user_id: int<br>
+                            - email: str<br>
+                            - username: str<br>
+                            - password_hash: str<br>
+                            - created_at: datetime
+                        </div>
+                        <div class="section-title">操作（Methods）</div>
+                        <div class="methods">
+                            + login(): bool<br>
+                            + logout(): void<br>
+                            + update_email(new_email: str): void<br>
+                            + delete_account(): void<br>
+                            - validate_password(password: str): bool
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <h3>クラス2: Order（注文）</h3>
+                    <div class="class-diagram">
+                        <div class="class-name">Order</div>
+                        <div class="section-title">属性（Attributes）</div>
+                        <div class="attributes">
+                            - order_id: int<br>
+                            - user_id: int<br>
+                            - total_amount: float<br>
+                            - status: str<br>
+                            - order_date: datetime
+                        </div>
+                        <div class="section-title">操作（Methods）</div>
+                        <div class="methods">
+                            + create_order(): void<br>
+                            + cancel_order(): bool<br>
+                            + calculate_total(): float<br>
+                            + add_product(product: Product, quantity: int): void<br>
+                            + get_order_details(): dict
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <h3>クラス3: Product（商品）</h3>
+                    <div class="class-diagram">
+                        <div class="class-name">Product</div>
+                        <div class="section-title">属性（Attributes）</div>
+                        <div class="attributes">
+                            - product_id: int<br>
+                            - name: str<br>
+                            - price: float<br>
+                            - stock: int<br>
+                            - description: str
+                        </div>
+                        <div class="section-title">操作（Methods）</div>
+                        <div class="methods">
+                            + get_price(): float<br>
+                            + update_stock(quantity: int): void<br>
+                            + is_available(): bool<br>
+                            - calculate_discount(rate: float): float
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relationship-diagram">
+                    <h3 style="margin-bottom: 15px;">クラス間の関係</h3>
+                    <pre style="text-align: left; display: inline-block;">
+┌──────────────┐
+│     User     │
+└──────────────┘
+       │ 1
+       │ 持つ
+       │
+       │ *
+┌──────────────┐
+│    Order     │
+└──────────────┘
+       │ *
+       │ 含む
+       │
+       │ *
+┌──────────────┐
+│   Product    │
+└──────────────┘
+
+関係性の説明：
+• User 1 ─── * Order : 1人のユーザーは複数の注文を持つ
+• Order * ─── * Product : 1つの注文は複数の商品を含む
+                    </pre>
+                </div>
+            </div>
+            
+            <!-- シート3：関係性一覧 -->
+            <div class="sheet" id="sheet3">
+                <h2 style="color: #667eea; margin-bottom: 20px;">🔗 クラス間の関係性一覧</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>関係の種類</th>
+                            <th>UML記号</th>
+                            <th>意味</th>
+                            <th>具体例</th>
+                            <th>使い分け</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>関連<br>(Association)</strong></td>
+                            <td><code>A ───── B</code></td>
+                            <td>一般的な関連</td>
+                            <td>User ───── Order<br>（ユーザーは注文を持つ）</td>
+                            <td>基本的な「持っている」関係</td>
+                        </tr>
+                        <tr>
+                            <td><strong>方向付き関連</strong></td>
+                            <td><code>A ────→ B</code></td>
+                            <td>一方向の関連</td>
+                            <td>Order ────→ Product<br>（注文は商品を参照）</td>
+                            <td>片方だけが相手を知っている</td>
+                        </tr>
+                        <tr>
+                            <td><strong>継承<br>(Generalization)</strong></td>
+                            <td><code>A ─────▷ B</code></td>
+                            <td>is-a関係<br>（AはBである）</td>
+                            <td>AdminUser ─────▷ User<br>（管理者ユーザーはユーザーである）</td>
+                            <td>クラスの汎化・特化</td>
+                        </tr>
+                        <tr>
+                            <td><strong>実装<br>(Realization)</strong></td>
+                            <td><code>A ─ ─ ─▷ B</code><br>（点線）</td>
+                            <td>インターフェース実装</td>
+                            <td>UserService ─ ─ ─▷ IUserService<br>（サービスはインターフェースを実装）</td>
+                            <td>インターフェースとの関係</td>
+                        </tr>
+                        <tr>
+                            <td><strong>依存<br>(Dependency)</strong></td>
+                            <td><code>A ─ ─ ─→ B</code><br>（点線矢印）</td>
+                            <td>use関係<br>（AはBを使う）</td>
+                            <td>OrderController ─ ─ ─→ Order<br>（コントローラーは注文を使う）</td>
+                            <td>メソッド内で一時的に利用</td>
+                        </tr>
+                        <tr>
+                            <td><strong>集約<br>(Aggregation)</strong></td>
+                            <td><code>A ◇───── B</code><br>（白菱形）</td>
+                            <td>has-a関係（弱い）<br>部分は独立可能</td>
+                            <td>Team ◇───── Member<br>（チームはメンバーを持つ）<br>※メンバーはチーム解散後も存在</td>
+                            <td>部分が独立して存在できる</td>
+                        </tr>
+                        <tr>
+                            <td><strong>合成<br>(Composition)</strong></td>
+                            <td><code>A ◆───── B</code><br>（黒菱形）</td>
+                            <td>has-a関係（強い）<br>部分は全体に依存</td>
+                            <td>Order ◆───── OrderItem<br>（注文は注文明細を持つ）<br>※注文が削除されれば明細も削除</td>
+                            <td>部分が全体に完全依存</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="tips">
+                    <h4>💡 多重度（Multiplicity）の表記</h4>
+                    <table style="margin-top: 10px;">
+                        <tr>
+                            <th>表記</th>
+                            <th>意味</th>
+                            <th>例</th>
+                        </tr>
+                        <tr>
+                            <td><code>1</code></td>
+                            <td>必ず1つ</td>
+                            <td>1人のユーザー</td>
+                        </tr>
+                        <tr>
+                            <td><code>0..1</code></td>
+                            <td>0または1つ</td>
+                            <td>プロフィール画像（あってもなくてもOK）</td>
+                        </tr>
+                        <tr>
+                            <td><code>*</code></td>
+                            <td>0以上</td>
+                            <td>複数の注文</td>
+                        </tr>
+                        <tr>
+                            <td><code>1..*</code></td>
+                            <td>1以上</td>
+                            <td>最低1つの商品</td>
+                        </tr>
+                        <tr>
+                            <td><code>0..5</code></td>
+                            <td>0〜5個</td>
+                            <td>最大5つまでの画像</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- シート4：記載ポイント -->
+            <div class="sheet" id="sheet4">
+                <h2 style="color: #667eea; margin-bottom: 20px;">📌 実務で使える記載ポイント</h2>
+                
+                <div class="example-box">
+                    <h3>1. クラス名の付け方</h3>
+                    <table>
+                        <tr>
+                            <th>ルール</th>
+                            <th>良い例</th>
+                            <th>悪い例</th>
+                        </tr>
+                        <tr>
+                            <td>名詞で命名</td>
+                            <td><code>User</code>, <code>Order</code>, <code>Product</code></td>
+                            <td><code>CreateUser</code>, <code>DoOrder</code></td>
+                        </tr>
+                        <tr>
+                            <td>単数形を使う</td>
+                            <td><code>Product</code></td>
+                            <td><code>Products</code></td>
+                        </tr>
+                        <tr>
+                            <td>パスカルケース</td>
+                            <td><code>ShoppingCart</code></td>
+                            <td><code>shopping_cart</code>, <code>shoppingcart</code></td>
+                        </tr>
+                        <tr>
+                            <td>意味のある名前</td>
+                            <td><code>PaymentProcessor</code></td>
+                            <td><code>Manager</code>, <code>Handler</code></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="example-box">
+                    <h3>2. 属性（フィールド）の記載ルール</h3>
+                    <ul>
+                        <li><strong>書式：</strong> <code>アクセス修飾子 属性名: 型 = デフォルト値</code></li>
+                        <li><strong>例：</strong> <code>- email: str</code>, <code>+ user_id: int</code></li>
+                        <li><strong>命名：</strong> スネークケース（Python）またはキャメルケース（Java）</li>
+                        <li><strong>型を明記：</strong> 必ず型を書く（int, str, bool, datetime等）</li>
+                    </ul>
+                    <table style="margin-top: 15px;">
+                        <tr>
+                            <th>記号</th>
+                            <th>意味</th>
+                            <th>使用例</th>
+                        </tr>
+                        <tr>
+                            <td><code>+</code></td>
+                            <td>public（公開）</td>
+                            <td><code>+ user_id: int</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>-</code></td>
+                            <td>private（非公開）</td>
+                            <td><code>- password_hash: str</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>#</code></td>
+                            <td>protected（継承先に公開）</td>
+                            <td><code># created_at: datetime</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>~</code></td>
+                            <td>package（同一パッケージ内）</td>
+                            <td><code>~ internal_id: int</code></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="example-box">
+                    <h3>3. メソッド（操作）の記載ルール</h3>
+                    <ul>
+                        <li><strong>書式：</strong> <code>アクセス修飾子 メソッド名(引数: 型): 戻り値の型</code></li>
+                        <li><strong>例：</strong> <code>+ login(email: str, password: str): bool</code></li>
+                        <li><strong>命名：</strong> 動詞で始める（get, set, create, update, delete等）</li>
+                        <li><strong>責任を明確に：</strong> 1メソッド1責任を心がける</li>
+                    </ul>
+                    <table style="margin-top: 15px;">
+                        <tr>
+                            <th>用途</th>
+                            <th>命名パターン</th>
+                            <th>例</th>
+                        </tr>
+                        <tr>
+                            <td>取得</td>
+                            <td>get〜, find〜</td>
+                            <td><code>get_user(), find_by_email()</code></td>
+                        </tr>
+                        <tr>
+                            <td>設定</td>
+                            <td>set〜, update〜</td>
+                            <td><code>set_email(), update_password()</code></td>
+                        </tr>
+                        <tr>
+                            <td>作成</td>
+                            <td>create〜, add〜</td>
+                            <td><code>create_order(), add_item()</code></td>
+                        </tr>
+                        <tr>
+                            <td>削除</td>
+                            <td>delete〜, remove〜</td>
+                            <td><code>delete_account(), remove_item()</code></td>
+                        </tr>
+                        <tr>
+                            <td>判定</td>
+                            <td>is〜, has〜, can〜</td>
+                            <td><code>is_valid(), has_permission()</code></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="example-box">
+                    <h3>4. よくある設計パターン</h3>
+                    <h4 style="margin-top: 15px;">パターン1: 継承（Generalization）</h4>
+                    <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+        Person（親クラス）
+           ▲
+           │
+    ┌──────┴──────┐
+    │             │
+Employee      Customer
+（従業員）    （顧客）
+                    </pre>
+                    
+                    <h4 style="margin-top: 20px;">パターン2: 集約（Aggregation）</h4>
+                    <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+Company ◇───── Employee
+（会社は従業員を持つが、会社がなくなっても従業員は存在する）
+                    </pre>
+                    
+                    <h4 style="margin-top: 20px;">パターン3: 合成（Composition）</h4>
+                    <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+Order ◆───── OrderItem
+（注文は注文明細を持ち、注文が削除されれば明細も削除される）
+                    </pre>
+                </div>
+                
+                <div class="tips">
+                    <h4>💡 設計のベストプラクティス</h4>
+                    <ol>
+                        <li><strong>単一責任の原則：</strong> 1クラスは1つの責任のみを持つ</li>
+                        <li><strong>開放閉鎖の原則：</strong> 拡張に開いて、修正に閉じている</li>
+                        <li><strong>リスコフの置換原則：</strong> 派生クラスは基底クラスと置き換え可能</li>
+                        <li><strong>インターフェース分離の原則：</strong> 使わないインターフェースに依存しない</li>
+                        <li><strong>依存性逆転の原則：</strong> 抽象に依存し、具象に依存しない</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <button class="download-btn" onclick
