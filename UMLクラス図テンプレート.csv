@@ -1,0 +1,138 @@
+﻿=== シート1: クラス図テンプレート ===
+項目,内容,記入例,メモ（記載ポイント）
+クラス名,クラスの名前を記載,User,名詞で統一。1クラス＝1役割を意識。
+説明,クラスの目的や役割を簡潔に記述,「ユーザー情報を管理するクラス」,一文で機能を説明すると見やすい。
+属性（フィールド）,クラスが持つデータ項目,"user_id: int / email: str / created_at: datetime",「変数名: 型」で書く。アクセス修飾子（+/-/#）を付けてもOK。
+操作（メソッド）,クラスが持つ処理,"login() / update_email() / delete_account()",動詞で統一。機能単位で命名。
+アクセス修飾子,公開範囲を明示,"+ public / - private / # protected",クラス図では簡略記号で表現可能。
+関連（Association）,他クラスとの関係,User 1 --- * Order,1対多（1..*）や依存関係（→）を矢印で表す。
+継承（Generalization）,継承関係を表現,AdminUser ⟶ User,三角矢印（▷）で表記。
+依存（Dependency）,あるクラスが他クラスを利用,Order ⟶ Product,メソッド内で利用する関係を示す。
+集約・合成,部分と全体の関係,"Team ◇── Member（集約） / Team ◆── Member（合成）",白菱形＝集約、黒菱形＝合成。
+
+
+=== シート2: 記入例（User - Order - Product） ===
+
+--- Userクラス ---
+クラス名,User
+説明,ユーザー情報を管理するクラス
+属性,- user_id: int
+,- email: str
+,- username: str
+,- password_hash: str
+,- created_at: datetime
+メソッド,+ login(): bool
+,+ logout(): void
+,+ update_email(new_email: str): void
+,+ delete_account(): void
+,- validate_password(password: str): bool
+
+--- Orderクラス ---
+クラス名,Order
+説明,注文情報を管理するクラス
+属性,- order_id: int
+,- user_id: int
+,- total_amount: float
+,- status: str
+,- order_date: datetime
+メソッド,+ create_order(): void
+,+ cancel_order(): bool
+,+ calculate_total(): float
+,+ add_product(product: Product / quantity: int): void
+,+ get_order_details(): dict
+
+--- Productクラス ---
+クラス名,Product
+説明,商品情報を管理するクラス
+属性,- product_id: int
+,- name: str
+,- price: float
+,- stock: int
+,- description: str
+メソッド,+ get_price(): float
+,+ update_stock(quantity: int): void
+,+ is_available(): bool
+,- calculate_discount(rate: float): float
+
+--- クラス間の関係 ---
+関係,User 1 --- * Order（1人のユーザーは複数の注文を持つ）
+,Order * --- * Product（1つの注文は複数の商品を含む）
+
+
+=== シート3: クラス間の関係性一覧 ===
+関係の種類,UML記号,意味,具体例,使い分け
+関連（Association）,A ───── B,一般的な関連,User ───── Order（ユーザーは注文を持つ）,基本的な「持っている」関係
+方向付き関連,A ────→ B,一方向の関連,Order ────→ Product（注文は商品を参照）,片方だけが相手を知っている
+継承（Generalization）,A ─────▷ B,is-a関係（AはBである）,AdminUser ─────▷ User（管理者ユーザーはユーザーである）,クラスの汎化・特化
+実装（Realization）,A ─ ─ ─▷ B（点線）,インターフェース実装,UserService ─ ─ ─▷ IUserService,インターフェースとの関係
+依存（Dependency）,A ─ ─ ─→ B（点線矢印）,use関係（AはBを使う）,OrderController ─ ─ ─→ Order,メソッド内で一時的に利用
+集約（Aggregation）,A ◇───── B（白菱形）,has-a関係（弱い）部分は独立可能,Team ◇───── Member,部分が独立して存在できる
+合成（Composition）,A ◆───── B（黒菱形）,has-a関係（強い）部分は全体に依存,Order ◆───── OrderItem,部分が全体に完全依存
+
+--- 多重度（Multiplicity）の表記 ---
+表記,意味,例
+1,必ず1つ,1人のユーザー
+0..1,0または1つ,プロフィール画像（あってもなくてもOK）
+*,0以上,複数の注文
+1..*,1以上,最低1つの商品
+0..5,0〜5個,最大5つまでの画像
+
+
+=== シート4: 実務で使える記載ポイント ===
+
+--- 1. クラス名の付け方 ---
+ルール,良い例,悪い例
+名詞で命名,User / Order / Product,CreateUser / DoOrder
+単数形を使う,Product,Products
+パスカルケース,ShoppingCart,shopping_cart / shoppingcart
+意味のある名前,PaymentProcessor,Manager / Handler
+
+--- 2. 属性の記載ルール ---
+書式,アクセス修飾子 属性名: 型 = デフォルト値
+例,- email: str / + user_id: int
+命名,スネークケース（Python）またはキャメルケース（Java）
+型を明記,必ず型を書く（int / str / bool / datetime等）
+
+--- アクセス修飾子 ---
+記号,意味,使用例
++,public（公開）,+ user_id: int
+-,private（非公開）,- password_hash: str
+#,protected（継承先に公開）,# created_at: datetime
+~,package（同一パッケージ内）,~ internal_id: int
+
+--- 3. メソッドの記載ルール ---
+書式,アクセス修飾子 メソッド名(引数: 型): 戻り値の型
+例,+ login(email: str / password: str): bool
+命名,動詞で始める（get / set / create / update / delete等）
+責任を明確に,1メソッド1責任を心がける
+
+--- メソッド命名パターン ---
+用途,命名パターン,例
+取得,get〜 / find〜,get_user() / find_by_email()
+設定,set〜 / update〜,set_email() / update_password()
+作成,create〜 / add〜,create_order() / add_item()
+削除,delete〜 / remove〜,delete_account() / remove_item()
+判定,is〜 / has〜 / can〜,is_valid() / has_permission()
+
+--- 設計のベストプラクティス ---
+1. 単一責任の原則,1クラスは1つの責任のみを持つ
+2. 開放閉鎖の原則,拡張に開いて / 修正に閉じている
+3. リスコフの置換原則,派生クラスは基底クラスと置き換え可能
+4. インターフェース分離の原則,使わないインターフェースに依存しない
+5. 依存性逆転の原則,抽象に依存し / 具象に依存しない
+
+
+=== 使い方ガイド ===
+1. このCSVファイルをExcelまたはGoogleスプレッドシートで開く
+2. 各シートのテンプレートを参考に、自分のプロジェクトのクラス図を作成
+3. 「===」で区切られた各セクションを別シートにコピーすると見やすい
+4. 必要に応じてセルを結合したり、色を付けたりしてカスタマイズ
+
+記載ポイント:
+• クラス図は 上：クラス名 → 中：属性 → 下：操作（メソッド） の3段構造
+• 共通処理はスーパークラスにまとめ、重複を避ける
+• 関連線に 多重度（1、0..1、1..*） を書くと理解しやすい
+• 操作（メソッド）は 処理の責任を持つクラス に置く
+
+作成者: Python先生 / 作成日: 2025年
+このテンプレートは自由に編集・配布できます。
